@@ -1,0 +1,76 @@
+pipeline {
+    agent any 
+    environment {
+        SNYK_API_TOKEN = credentials('Snyk')
+    }
+    tools { 
+        maven 'Task 6.2' 
+    }
+    stages {
+        stage('Build') {
+            steps {
+                dir('my-app') {  
+                    sh 'mvn clean install'
+                }
+            }
+        }
+        stage('Unit and Integration Tests') {
+            steps {
+                dir('my-app') {  
+                    sh 'mvn test'
+                }
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                dir('my-app') {  
+                    sh 'npm run lint'
+                }
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                dir('my-app') {  
+                    sh """
+                    export SNYK_TOKEN=${SNYK_API_TOKEN}
+                    snyk test
+                    """
+                }
+            }
+        }
+        stage('Deploy to EC2') {
+            steps {
+                dir('my-app') {
+                    echo 'Simulating deploying to staging server...'
+                }
+            }
+        }       
+
+        stage('Integration Tests on Staging') {
+            steps {
+                dir('my-app') {  
+                    echo 'Simulating integration tests on staging environment...'
+                }
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                dir('my-app') {  
+                    echo 'Simulating deployment to production environment...'
+                }   
+            }
+        }
+    }
+    post {
+        failure {
+            emailext body: 'Pipeline has failed. Please check the logs for details.',
+                    subject: 'Pipeline Build Failure',
+                    to: 'natexuan0805@gmail.com'
+        }
+        success {
+            emailext body: 'Pipeline has successfully completed.',
+                    subject: 'Pipeline Build Success',
+                    to: 'natexuan0805@gmail.com'
+        }
+    }
+}

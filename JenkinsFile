@@ -41,7 +41,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 dir('my-app') {
-                    echo 'Simulating deploying to staging server...'
+                    echo 'Simulating deploying to staging server'
                 }
             }
         }       
@@ -49,14 +49,14 @@ pipeline {
         stage('Integration Tests on Staging') {
             steps {
                 dir('my-app') {  
-                    echo 'Simulating integration tests on staging environment...'
+                    echo 'Simulating integration tests on staging environment'
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
                 dir('my-app') {  
-                    echo 'Simulating deployment to production environment...'
+                    echo 'Simulating deployment to production environment'
                 }   
             }
         }
